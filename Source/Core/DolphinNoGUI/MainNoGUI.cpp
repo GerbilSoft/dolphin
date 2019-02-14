@@ -136,6 +136,13 @@ void Host_UpdateProgressDialog(const char* caption, int position, int total)
 {
 }
 
+void Host_PPCTitleChanged()
+{
+#ifdef USE_DISCORD_PRESENCE
+  Discord::UpdateDiscordPresence();
+#endif
+}
+
 #if HAVE_X11
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>

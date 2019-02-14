@@ -151,6 +151,10 @@ void Host_UpdateProgressDialog(const char* caption, int position, int total)
 {
 }
 
+void Host_PPCTitleChanged()
+{
+}
+
 static bool MsgAlert(const char* caption, const char* text, bool yes_no, MsgType /*style*/)
 {
   __android_log_print(ANDROID_LOG_ERROR, DOLPHIN_TAG, "%s:%s", caption, text);
