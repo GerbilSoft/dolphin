@@ -33,6 +33,7 @@
 #include "Core/Core.h"
 #include "Core/FifoPlayer/FifoDataFile.h"
 #include "Core/HLE/HLE.h"
+#include "Core/Host.h"
 #include "Core/HW/DVD/DVDInterface.h"
 #include "Core/HW/SI/SI.h"
 #include "Core/IOS/ES/ES.h"
@@ -749,6 +750,7 @@ void SConfig::SetRunningGameMetadata(const std::string& game_id, u64 title_id, u
   const Core::TitleDatabase title_database;
   m_title_description = title_database.Describe(m_game_id, type);
   NOTICE_LOG(CORE, "Active title: %s", m_title_description.c_str());
+  Host_TitleChanged();
 
   Config::AddLayer(ConfigLoaders::GenerateGlobalGameConfigLoader(game_id, revision));
   Config::AddLayer(ConfigLoaders::GenerateLocalGameConfigLoader(game_id, revision));

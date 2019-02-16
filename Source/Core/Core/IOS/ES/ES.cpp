@@ -19,7 +19,6 @@
 #include "Common/StringUtil.h"
 #include "Core/CommonTitles.h"
 #include "Core/ConfigManager.h"
-#include "Core/Host.h"
 #include "Core/HW/Memmap.h"
 #include "Core/IOS/ES/Formats.h"
 #include "Core/IOS/FS/FileSystem.h"
@@ -315,7 +314,6 @@ bool ES::LaunchPPCTitle(u64 title_id, bool skip_reload)
   if (!tmd.GetContent(tmd.GetBootIndex(), &content))
     return false;
 
-  Host_TitleChanged();
   return m_ios.BootstrapPPC(GetContentPath(tmd.GetTitleId(), content));
 }
 
