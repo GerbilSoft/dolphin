@@ -158,7 +158,7 @@ void Host_RefreshDSPDebuggerWindow()
 {
 }
 
-void Host_PPCTitleChanged()
+void Host_TitleChanged()
 {
 #ifdef USE_DISCORD_PRESENCE
   // TODO: Not sure if the NetPlay check is needed.

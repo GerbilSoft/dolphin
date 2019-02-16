@@ -315,7 +315,7 @@ bool ES::LaunchPPCTitle(u64 title_id, bool skip_reload)
   if (!tmd.GetContent(tmd.GetBootIndex(), &content))
     return false;
 
-  Host_PPCTitleChanged();
+  Host_TitleChanged();
   return m_ios.BootstrapPPC(GetContentPath(tmd.GetTitleId(), content));
 }
 

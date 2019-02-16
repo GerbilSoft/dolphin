@@ -52,6 +52,6 @@ void Host_YieldToUI()
 void Host_UpdateProgressDialog(const char* caption, int position, int total)
 {
 }
-void Host_PPCTitleChanged()
+void Host_TitleChanged()
 {
 }
