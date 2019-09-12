@@ -227,13 +227,22 @@ bool CBoot::EmulatedBS2_GC(const DiscIO::VolumeDisc& volume)
 
 bool CBoot::SetupWiiMemory(IOS::HLE::IOSC::ConsoleType console_type)
 {
-  static const std::map<DiscIO::Region, const RegionSetting> region_settings = {
-      {DiscIO::Region::NTSC_J, {"JPN", "NTSC", "JP", "LJ"}},
-      {DiscIO::Region::NTSC_U, {"USA", "NTSC", "US", "LU"}},
-      {DiscIO::Region::PAL, {"EUR", "PAL", "EU", "LE"}},
-      {DiscIO::Region::NTSC_K, {"KOR", "NTSC", "KR", "LKH"}}};
-  auto entryPos = region_settings.find(SConfig::GetInstance().m_region);
-  const RegionSetting& region_setting = entryPos->second;
+  // Index: DiscIO::Region
+  static const RegionSetting region_settings[] = {
+      {"JPN", "NTSC", "JP", "LJ"},  // NTSC_J
+      {"USA", "NTSC", "US", "LU"},  // NTSC_U
+      {"EUR", "PAL", "EU", "LE"},   // PAL
+      {"", "", "", ""},             // Unknown
+      {"KOR", "NTSC", "KR", "LKH"}, // NTSC_K
+  };
+  const DiscIO::Region region = SConfig::GetInstance().m_region;
+  if (region < DiscIO::Region::NTSC_J || region >= DiscIO::Region::NTSC_K ||
+      region == DiscIO::Region::Unknown)
+  {
+    PanicAlertT("SetupWiiMemory: Invalid region value");
+    return false;
+  }
+  const RegionSetting& region_setting = region_settings[(int)region];
 
   Common::SettingsHandler gen;
   std::string serno;
@@ -268,7 +277,10 @@ bool CBoot::SetupWiiMemory(IOS::HLE::IOSC::ConsoleType console_type)
     INFO_LOG(BOOT, "Using serial number: %s", serno.c_str());
   }
 
-  std::string model = "RVL-001(" + region_setting.area + ")";
+  std::string model = "RVL-001(";
+  model += region_setting.area;
+  model += ')';
+
   gen.AddSetting("AREA", region_setting.area);
   gen.AddSetting("MODEL", model);
   gen.AddSetting("DVD", "0");
