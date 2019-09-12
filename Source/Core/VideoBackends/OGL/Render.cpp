@@ -144,53 +144,54 @@ static void APIENTRY ClearDepthf(GLfloat depthval)
 
 static void InitDriverInfo()
 {
-  std::string svendor = std::string(g_ogl_config.gl_vendor);
-  std::string srenderer = std::string(g_ogl_config.gl_renderer);
-  std::string sversion = std::string(g_ogl_config.gl_version);
   DriverDetails::Vendor vendor = DriverDetails::VENDOR_UNKNOWN;
   DriverDetails::Driver driver = DriverDetails::DRIVER_UNKNOWN;
   DriverDetails::Family family = DriverDetails::Family::UNKNOWN;
   double version = 0.0;
 
   // Get the vendor first
-  if (svendor == "NVIDIA Corporation" && srenderer != "NVIDIA Tegra")
+  if (!strcmp(g_ogl_config.gl_vendor, "NVIDIA Corporation"))
   {
-    vendor = DriverDetails::VENDOR_NVIDIA;
+    if (!strcmp(g_ogl_config.gl_renderer, "NVIDIA Tegra"))
+    {
+      vendor = DriverDetails::VENDOR_TEGRA;
+    }
+    else
+    {
+      vendor = DriverDetails::VENDOR_NVIDIA;
+    }
   }
-  else if (svendor == "ATI Technologies Inc." || svendor == "Advanced Micro Devices, Inc.")
+  else if (!strcmp(g_ogl_config.gl_vendor, "ATI Technologies Inc.") ||
+           !strcmp(g_ogl_config.gl_vendor, "Advanced Micro Devices, Inc."))
   {
     vendor = DriverDetails::VENDOR_ATI;
   }
-  else if (std::string::npos != sversion.find("Mesa"))
+  else if (strstr(g_ogl_config.gl_version, "Mesa") != nullptr)
   {
     vendor = DriverDetails::VENDOR_MESA;
   }
-  else if (std::string::npos != svendor.find("Intel"))
+  else if (strstr(g_ogl_config.gl_vendor, "Intel") != nullptr)
   {
     vendor = DriverDetails::VENDOR_INTEL;
   }
-  else if (svendor == "ARM")
+  else if (!strcmp(g_ogl_config.gl_vendor, "ARM"))
   {
     vendor = DriverDetails::VENDOR_ARM;
   }
-  else if (svendor == "http://limadriver.org/")
+  else if (!strcmp(g_ogl_config.gl_vendor, "http://limadriver.org/"))
   {
     vendor = DriverDetails::VENDOR_ARM;
     driver = DriverDetails::DRIVER_LIMA;
   }
-  else if (svendor == "Qualcomm")
+  else if (!strcmp(g_ogl_config.gl_vendor, "Qualcomm"))
   {
     vendor = DriverDetails::VENDOR_QUALCOMM;
   }
-  else if (svendor == "Imagination Technologies")
+  else if (!strcmp(g_ogl_config.gl_vendor, "Imagination Technologies"))
   {
     vendor = DriverDetails::VENDOR_IMGTEC;
   }
-  else if (svendor == "NVIDIA Corporation" && srenderer == "NVIDIA Tegra")
-  {
-    vendor = DriverDetails::VENDOR_TEGRA;
-  }
-  else if (svendor == "Vivante Corporation")
+  else if (!strcmp(g_ogl_config.gl_vendor, "Vivante Corporation"))
   {
     vendor = DriverDetails::VENDOR_VIVANTE;
   }
@@ -226,20 +227,24 @@ static void InitDriverInfo()
     break;
   case DriverDetails::VENDOR_MESA:
   {
-    if (svendor == "nouveau")
+    if (!strcmp(g_ogl_config.gl_vendor, "nouveau"))
     {
       driver = DriverDetails::DRIVER_NOUVEAU;
     }
-    else if (svendor == "Intel Open Source Technology Center")
+    else if (!strcmp(g_ogl_config.gl_vendor, "Intel Open Source Technology Center"))
     {
       driver = DriverDetails::DRIVER_I965;
-      if (srenderer.find("Sandybridge") != std::string::npos)
+      if (strstr(g_ogl_config.gl_renderer, "Sandybridge") != nullptr)
+      {
         family = DriverDetails::Family::INTEL_SANDY;
-      else if (srenderer.find("Ivybridge") != std::string::npos)
+      }
+      else if (strstr(g_ogl_config.gl_renderer, "Ivybridge") != nullptr)
+      {
         family = DriverDetails::Family::INTEL_IVY;
+      }
     }
-    else if (std::string::npos != srenderer.find("AMD") ||
-             std::string::npos != srenderer.find("ATI"))
+    else if (strstr(g_ogl_config.gl_renderer, "AMD") != nullptr ||
+             strstr(g_ogl_config.gl_renderer, "ATI") != nullptr)
     {
       driver = DriverDetails::DRIVER_R600;
     }
