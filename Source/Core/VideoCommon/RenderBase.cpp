@@ -899,7 +899,7 @@ void Renderer::RecordVideoMemory()
 static std::string GenerateImGuiVertexShader()
 {
   const APIType api_type = g_ActiveConfig.backend_info.api_type;
-  std::stringstream ss;
+  std::ostringstream ss;
 
   // Uniform buffer contains the viewport size, and we transform in the vertex shader.
   if (api_type == APIType::D3D)
@@ -950,7 +950,7 @@ static std::string GenerateImGuiPixelShader()
 {
   const APIType api_type = g_ActiveConfig.backend_info.api_type;
 
-  std::stringstream ss;
+  std::ostringstream ss;
   if (api_type == APIType::D3D)
   {
     ss << "Texture2DArray tex0 : register(t0);\n"
