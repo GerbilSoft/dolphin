@@ -24,7 +24,7 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
       return true;
   }
 
-  static const Config::ConfigLocation *const s_setting_saveable[] = {
+  static constexpr std::array<const Config::ConfigLocation*, 90> s_setting_saveable = {
       // Main.Core
 
       &Config::MAIN_DEFAULT_ISO.location,
@@ -144,8 +144,8 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
 
   };
 
-  for (size_t i = 0; i < sizeof(s_setting_saveable)/sizeof(s_setting_saveable[0]); i++) {
-    if (*s_setting_saveable[i] == config_location)
+  for (auto iter = s_setting_saveable.cbegin(); iter != s_setting_saveable.cend(); ++iter) {
+    if (*(*iter) == config_location)
       return true;
   }
   return false;
