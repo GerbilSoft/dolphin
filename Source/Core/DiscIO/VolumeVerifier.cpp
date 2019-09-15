@@ -344,7 +344,7 @@ bool VolumeVerifier::IsDebugSigned() const
 
 bool VolumeVerifier::ShouldHaveChannelPartition() const
 {
-  static constexpr std::array<const char*, 18> channel_discs = {
+  static constexpr std::array<std::string_view, 18> channel_discs = {
       "RFNE01", "RFNJ01", "RFNK01", "RFNP01", "RFNW01",
       "RFPE01", "RFPJ01", "RFPK01", "RFPP01", "RFPW01",
       "RGWE41", "RGWJ41", "RGWP41", "RGWX41",
@@ -353,36 +353,32 @@ bool VolumeVerifier::ShouldHaveChannelPartition() const
 
   return std::binary_search(channel_discs.cbegin(), channel_discs.cend(),
     m_volume.GetGameID().c_str(),
-    [](const char *a, const char *b) { return strcmp(a, b) < 0; });
+    [](const std::string_view a, const std::string_view b) { return a < b; });
 }
 
 bool VolumeVerifier::ShouldHaveInstallPartition() const
 {
-  static const char dqx[][8] = {"S4MJGD", "S4SJGD", "S6TJGD", "SDQJGD"};
+  static constexpr std::array<std::string_view, 4> dqx = {
+      "S4MJGD", "S4SJGD", "S6TJGD", "SDQJGD"
+  };
   const std::string& gameID = m_volume.GetGameID();
-  for (size_t i = 0; i < sizeof(dqx)/sizeof(dqx[0]); i++) {
-    if (gameID == dqx[i])
-      return true;
-  }
-  return false;
+  return std::any_of(dqx.cbegin(), dqx.cend(), [&, gameID](std::string_view x) { return x == gameID; });
 }
 
 bool VolumeVerifier::ShouldHaveMasterpiecePartitions() const
 {
-  static const char ssbb[][8] = {"RSBE01", "RSBJ01", "RSBK01", "RSBP01"};
+  static constexpr std::array<std::string_view, 4> ssbb = {
+      "RSBE01", "RSBJ01", "RSBK01", "RSBP01"
+  };
   const std::string& gameID = m_volume.GetGameID();
-  for (size_t i = 0; i < sizeof(ssbb)/sizeof(ssbb[0]); i++) {
-    if (gameID == ssbb[i])
-      return true;
-  }
-  return false;
+  return std::any_of(ssbb.cbegin(), ssbb.cend(), [&, gameID](std::string_view x) { return x == gameID; });
 }
 
 bool VolumeVerifier::ShouldBeDualLayer() const
 {
   // The Japanese versions of Xenoblade and The Last Story are single-layer
   // (unlike the other versions) and must not be added to this list.
-  static constexpr std::array<const char*, 33> dual_layer_discs = {
+  static constexpr std::array<std::string_view, 33> dual_layer_discs = {
       "R3ME01", "R3MP01", "R3OE01", "R3OJ01", "R3OP01", "RSBE01", "RSBJ01", "RSBK01", "RSBP01",
       "RXMJ8P", "S59E01", "S59JC8", "S59P01", "S5QJC8", "SAKENS", "SAKPNS", "SK8V52", "SK8X52",
       "SLSEXJ", "SLSP01", "SQIE4Q", "SQIP4Q", "SQIY4Q", "SR5E41", "SR5P41", "SUOE41", "SUOP41",
@@ -391,7 +387,7 @@ bool VolumeVerifier::ShouldBeDualLayer() const
 
   return std::binary_search(dual_layer_discs.cbegin(), dual_layer_discs.cend(),
     m_volume.GetGameID().c_str(),
-    [](const char *a, const char *b) { return strcmp(a, b) < 0; });
+    [](const std::string_view a, const std::string_view b) { return a < b; });
 }
 
 void VolumeVerifier::CheckDiscSize()

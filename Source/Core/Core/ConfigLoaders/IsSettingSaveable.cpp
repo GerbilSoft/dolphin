@@ -144,10 +144,7 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
 
   };
 
-  for (auto iter = s_setting_saveable.cbegin(); iter != s_setting_saveable.cend(); ++iter) {
-    if (*(*iter) == config_location)
-      return true;
-  }
-  return false;
+  return std::any_of(s_setting_saveable.cbegin(), s_setting_saveable.cend(),
+    [&, config_location](const Config::ConfigLocation *location) { return *location == config_location; });
 }
 }  // namespace ConfigLoaders
