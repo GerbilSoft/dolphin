@@ -358,20 +358,17 @@ bool VolumeVerifier::ShouldHaveChannelPartition() const
 
 bool VolumeVerifier::ShouldHaveInstallPartition() const
 {
-  static constexpr std::array<std::string_view, 4> dqx = {
-      "S4MJGD", "S4SJGD", "S6TJGD", "SDQJGD"
-  };
-  const std::string& gameID = m_volume.GetGameID();
-  return std::any_of(dqx.cbegin(), dqx.cend(), [&, gameID](std::string_view x) { return x == gameID; });
+  static constexpr std::array<std::string_view, 4> dqx = {"S4MJGD", "S4SJGD", "S6TJGD", "SDQJGD"};
+  const std::string& game_id = m_volume.GetGameID();
+  return std::any_of(dqx.cbegin(), dqx.cend(),
+                     [&, game_id](std::string_view x) { return x == game_id; });
 }
 
 bool VolumeVerifier::ShouldHaveMasterpiecePartitions() const
 {
-  static constexpr std::array<std::string_view, 4> ssbb = {
-      "RSBE01", "RSBJ01", "RSBK01", "RSBP01"
-  };
-  const std::string& gameID = m_volume.GetGameID();
-  return std::any_of(ssbb.cbegin(), ssbb.cend(), [&, gameID](std::string_view x) { return x == gameID; });
+  static constexpr std::array<std::string_view, 4> ssbb = {"RSBE01", "RSBJ01", "RSBK01", "RSBP01"};
+  const std::string& game_id = m_volume.GetGameID();
+  return std::any_of(ssbb.cbegin(), ssbb.cend(), [&, game_id](std::string_view x) { return x == game_id; });
 }
 
 bool VolumeVerifier::ShouldBeDualLayer() const
@@ -385,9 +382,9 @@ bool VolumeVerifier::ShouldBeDualLayer() const
       "SVXX52", "SVXY52", "SX4E01", "SX4P01", "SZ3EGT", "SZ3PGT",
   };
 
-  return std::binary_search(dual_layer_discs.cbegin(), dual_layer_discs.cend(),
-    m_volume.GetGameID().c_str(),
-    [](const std::string_view a, const std::string_view b) { return a < b; });
+  return std::binary_search(
+      dual_layer_discs.cbegin(), dual_layer_discs.cend(), m_volume.GetGameID().c_str(),
+      [](const std::string_view a, const std::string_view b) { return a < b; });
 }
 
 void VolumeVerifier::CheckDiscSize()
