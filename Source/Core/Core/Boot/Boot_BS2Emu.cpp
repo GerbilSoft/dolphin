@@ -242,7 +242,7 @@ bool CBoot::SetupWiiMemory(IOS::HLE::IOSC::ConsoleType console_type)
     PanicAlertT("SetupWiiMemory: Invalid region value");
     return false;
   }
-  const RegionSetting& region_setting = region_settings[(int)region];
+  const RegionSetting& region_setting = region_settings[static_cast<int>(region)];
 
   Common::SettingsHandler gen;
   std::string serno;

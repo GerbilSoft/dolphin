@@ -19,7 +19,8 @@ bool IsSettingSaveable(const Config::ConfigLocation& config_location)
   if (config_location.system == Config::System::Logger)
     return true;
 
-  if (config_location.system == Config::System::Main) {
+  if (config_location.system == Config::System::Main)
+  {
     if (config_location.section == "NetPlay" || config_location.section == "General")
       return true;
   }
